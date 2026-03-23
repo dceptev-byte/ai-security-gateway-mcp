@@ -4,7 +4,7 @@ import type { AnonymizationMode, Finding, PIIType, RiskLevel } from "./types.js"
 // Regex patterns
 // ---------------------------------------------------------------------------
 const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-const PHONE_REGEX = /((\+91|0)[\s-]?)?[6-9]\d{9}/g;
+const PHONE_REGEX = /((\+91|0)[\s-]?)?[6-9]\d{4}[\s-]?\d{5}/g;
 const CREDIT_CARD_REGEX = /\b(?:\d[ -]?){13,16}\b/g;
 const AADHAAR_REGEX = /\b[2-9]{1}[0-9]{3}\s?[0-9]{4}\s?[0-9]{4}\b/g;
 const PAN_REGEX = /\b[A-Z]{5}[0-9]{4}[A-Z]{1}\b/g;
