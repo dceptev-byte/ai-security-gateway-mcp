@@ -1,0 +1,33 @@
+{
+  "name": "ai-security-gateway-mcp",
+  "version": "2.0.0",
+  "description": "MCP server for local PII detection and masking",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "ai-security-gateway-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dceptev-byte/ai-security-gateway-mcp.git"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
