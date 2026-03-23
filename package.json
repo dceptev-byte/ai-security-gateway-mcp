@@ -14,13 +14,16 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dceptev-byte/ai-security-gateway-mcp.git"
   },
-  "license": "ISC",
+  "keywords": ["mcp", "pii", "privacy", "security", "claude", "llm"],
+  "author": "dceptev-byte",
+  "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",
     "zod": "^4.3.6"

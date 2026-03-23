@@ -1,67 +1,98 @@
-# ai-security-gateway-mcp
+# AI Security Gateway — MCP Server
 
-A local MCP server that detects and masks Personally Identifiable Information (PII) in prompts before they reach any LLM.
+> Local PII detection and masking for Claude Desktop, Cursor, and Windsurf.
+> Your prompts are scanned on your machine before reaching any LLM.
 
 ## What it does
 
-- Runs entirely on your machine — no data sent to any cloud service
-- Detects 8 PII types: email, phone, credit card, Aadhaar, PAN, IP address, passport, and bank account numbers
-- Supports three anonymization modes: Mask, Redact, and Replace
-- Exposes MCP tools usable natively inside Claude Desktop, Cursor, and Windsurf
+Automatically detects and masks sensitive data in your prompts:
 
-## Claude Desktop Integration
+- 📧 Email addresses
+- 📱 Phone numbers (India-friendly)
+- 💳 Credit card numbers
+- 🪪 Aadhaar numbers
+- 📋 PAN cards
+- 🌐 IP addresses
+- 🛂 Passport numbers
+- 🏦 Bank account numbers
 
-**1. Build the server:**
-```bash
-npm install
-npm run build
-```
+## How it works
 
-**2. Find your Claude Desktop config file:**
+Once installed, Claude Desktop (and Cursor/Windsurf) automatically has access to a `scan_prompt` tool. You can ask Claude to scan any prompt before sending it, or Claude will proactively suggest scanning when it detects potentially sensitive content.
 
-- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
-- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+## Installation
 
-**3. Add this to the config** (replace the path with your actual absolute path to `dist/index.js`):
+### Option 1 — Run directly with npx (no install needed)
+
+Add to your `claude_desktop_config.json`:
+
 ```json
 {
   "mcpServers": {
     "ai-security-gateway": {
-      "command": "node",
-      "args": ["C:\\Claude\\ai-security-gateway-mcp\\dist\\index.js"]
+      "command": "npx",
+      "args": ["-y", "ai-security-gateway-mcp"]
     }
   }
 }
 ```
 
-> On Windows, use double backslashes `\\` in the path.
+### Option 2 — Install globally
 
-**4. Fully quit and restart Claude Desktop.** Look for the plug icon (🔌) at the bottom of the chat input — this confirms the MCP server is connected.
-
-## Test prompts
-
-**HIGH risk — 4+ findings:**
-```
-Please scan this before I send it: Hi my name is Rahul Sharma, email: rahul.sharma@gmail.com, Aadhaar: 2345 6789 0123, PAN: ABCDE1234F, phone: +91 98765 43210
+```bash
+npm install -g ai-security-gateway-mcp
 ```
 
-**LOW risk — no PII:**
-```
-Please scan this: What is the capital of France?
+Then add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "ai-security-gateway": {
+      "command": "ai-security-gateway-mcp"
+    }
+  }
+}
 ```
 
-**REPLACE mode:**
+## Config file locations
+
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+## Usage
+
+After restarting Claude Desktop, try:
+
 ```
-Scan this in REPLACE mode: My credit card is 4532 1234 5678 9012 and my email is test@example.com
+Scan this prompt for PII before I send it: [your text here]
+```
+```
+Use REPLACE mode to anonymize: [your text here]
+```
+```
+Is this safe to send to an LLM? [your text here]
 ```
 
-## Troubleshooting
+## Anonymization modes
 
-| Symptom | Fix |
-|---|---|
-| No plug icon after restart | Claude Desktop wasn't fully quit — check system tray and kill from there |
-| Path not found error | Verify path uses double backslashes `\\` on Windows; re-run `npm run build` |
-| Tool not listed | Check `%APPDATA%\Claude\logs\` (Windows) or `~/Library/Logs/Claude/` (macOS) for MCP errors |
+| Mode | Behaviour | Example |
+|---|---|---|
+| `MASK` | Partially hides values | `j***@g***.com` |
+| `REDACT` | Removes values entirely | *(empty)* |
+| `REPLACE` | Substitutes typed tokens | `[EMAIL]`, `[AADHAAR]` |
+
+## Works with
+
+- Claude Desktop (macOS and Windows)
+- Cursor
+- Windsurf
+- Any MCP-compatible client
+
+## Privacy
+
+All detection runs locally on your machine.
+No data is sent to any server or cloud service.
 
 ## Development
 
@@ -72,14 +103,6 @@ npm run dev     # run via tsx (no compile step)
 npm start       # run compiled output
 ```
 
-## MCP Tools
+## Related
 
-### `scan_prompt`
-
-Scans text for PII before sending to an LLM.
-
-**Inputs:**
-- `text` (string) — the prompt to scan
-- `mode` (`MASK` | `REDACT` | `REPLACE`, default `MASK`) — how to anonymize detected PII
-
-**Output:** Risk level, list of findings with confidence scores, and the anonymized version of the text.
+- Web app (v1): https://github.com/dceptev-byte/ai_security_gateway
